@@ -1,7 +1,8 @@
-use gpui::VisualContext;
+use std::process::Child;
+
 use gpui::{
     div, rgb, DefiniteLength, FocusHandle, InteractiveElement, IntoElement, KeyDownEvent,
-    ParentElement, Render, Styled, ViewContext,
+    ParentElement, Render, Styled, Context, Window
 };
 
 use crate::button::*;
@@ -16,7 +17,7 @@ pub struct Root {
 }
 
 impl Root {
-    pub fn new(cx: &mut ViewContext<Self>) -> Self {
+    pub fn new(cx: &mut Context<Self>) -> Self {
         let logic = Logic::new();
 
         Self {
@@ -25,7 +26,7 @@ impl Root {
         }
     }
 
-    fn get_buttons(&self, cx: &mut ViewContext<Self>) -> Vec<Button> {
+    fn get_buttons(&self, cx: &mut Context<Self>) -> Vec<Button> {
         let mut buttons = Vec::new();
 
         for button_type in BUTTONS {
@@ -42,9 +43,9 @@ impl Root {
             };
 
             let button = Button::new(button_type, basis, variant).on_click(cx.listener(
-                move |this, _view, cx| {
+                move |this, _, _window, app| {
                     this.logic.on_button_pressed(button_type);
-                    cx.notify()
+                    app.notify()
                 },
             ));
 
@@ -56,17 +57,17 @@ impl Root {
 }
 
 impl Render for Root {
-    fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let display_value = self.logic.get_display_value();
+        let target_value = format!("{}", display_value);
+
         let buttons = self.get_buttons(cx);
 
-        // To accept key stroke events it is necessary to focus the
-        // view at the beginning
-        cx.focus(&self.focus_handle);
+        let s: &str = "abc";
 
         div()
             .track_focus(&self.focus_handle)
-            .on_key_down(cx.listener(|this, event: &KeyDownEvent, cx| {
+            .on_key_down(cx.listener(|this, event: &KeyDownEvent, _: &mut Window, cx: &mut Context<Self>| {
                 this.logic.handle_key_input(&event.keystroke.key.as_str());
                 cx.notify();
             }))
@@ -75,7 +76,7 @@ impl Render for Root {
             .flex_col()
             .bg(rgb(PAD_COLOR))
             .text_lg()
-            .child(cx.new_view(|_cx| Display::new(display_value)))
+            .child(target_value)
             .child(
                 div()
                     .flex()
