@@ -35,7 +35,6 @@ fn main() {
     });
 }
 
-
 // GPUI offers three different registers depending on your need:
 //// State management and communication with Entity's. Whenever you need to store application state that communicates between diefferent parts of your application, you will want to use GPUI's entities. Entities are owned by GPUI and are only accessible through an owned smart pointer similar to an Rc. See the app::Context moule for more information
 //// High level, declarative UI with views. All UI in GPUI starts with a view. A view is simply an Entity that can be readered by implementing the Render trait. Views build a tree of elements, lay them out and style them with a tailwing-style API, and then give them to GPUI to turn into pixels. See the div element for all purpose swiss-army knife of rendering

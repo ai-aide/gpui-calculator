@@ -1,8 +1,7 @@
-use std::process::Child;
-
+use gpui::AppContext;
 use gpui::{
-    div, rgb, DefiniteLength, FocusHandle, InteractiveElement, IntoElement, KeyDownEvent,
-    ParentElement, Render, Styled, Context, Window
+    div, rgb, Context, DefiniteLength, FocusHandle, InteractiveElement, IntoElement, KeyDownEvent,
+    ParentElement, Render, Styled, Window,
 };
 
 use crate::button::*;
@@ -59,24 +58,24 @@ impl Root {
 impl Render for Root {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let display_value = self.logic.get_display_value();
-        let target_value = format!("{}", display_value);
-
         let buttons = self.get_buttons(cx);
 
-        let s: &str = "abc";
+        let target = cx.new(|_cx| Display::new(display_value));
 
         div()
             .track_focus(&self.focus_handle)
-            .on_key_down(cx.listener(|this, event: &KeyDownEvent, _: &mut Window, cx: &mut Context<Self>| {
-                this.logic.handle_key_input(&event.keystroke.key.as_str());
-                cx.notify();
-            }))
+            .on_key_down(cx.listener(
+                |this, event: &KeyDownEvent, _: &mut Window, cx: &mut Context<Self>| {
+                    this.logic.handle_key_input(&event.keystroke.key.as_str());
+                    cx.notify();
+                },
+            ))
             .size_full()
             .flex()
             .flex_col()
             .bg(rgb(PAD_COLOR))
             .text_lg()
-            .child(target_value)
+            .child(target)
             .child(
                 div()
                     .flex()
