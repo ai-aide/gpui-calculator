@@ -11,6 +11,7 @@ env_logger = "0.11.8"
 gpui = { git = "https://github.com/huacnlee/zed.git", branch = "webview" }
 log = "0.4.27"
 lyon = {version = "1.0", features = ["extra"]}
+smallvec = "1.15.0"
 unicode-segmentation = "1.12.0"
 
 [build]
