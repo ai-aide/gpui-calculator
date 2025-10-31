@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.98"
 env_logger = "0.11.8"
-gpui = { git = "https://github.com/huacnlee/zed.git", branch = "webview" }
+gpui = "0.2.2"
 log = "0.4.27"
 lyon = {version = "1.0", features = ["extra"]}
 smallvec = "1.15.0"

@@ -14,6 +14,7 @@ impl Render for SetMenus {
             .text_xl()
             .text_color(rgb(0xffffff))
             .child("Set Menus Example")
+            
     }
 }
 
